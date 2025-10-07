@@ -22,30 +22,6 @@ exports.getBestRating = (req, res, next) => {
     .catch((error) => res.status(400).json({error}));
 };
 
-// exports.createBook = (req, res, next) => {
-//   const bookObject = JSON.parse(req.body.book);
-//   delete bookObject._id;
-//   delete bookObject._userId;
-//   delete req.body._id;
-//   const filename = `resized-${req.file.filename}`;
-//   sharp(req.file.path)
-//     .resize({height: 800})
-//     .toFile(`images/${filename}`)
-//     .then(() => {
-//       fs.unlink(req.file.path, (err) => {
-//         if (err) console.error('Erreur suppression image originale:', err);
-//       });
-//       const book = new Book({
-//         ...bookObject,
-//         userId: req.auth.userId,
-//         imageUrl: `${req.protocol}://${req.get('host')}/images/${filename}`,
-//       });
-//       return book.save();
-//     })
-//     .then(() => res.status(201).json({message: 'Livre enregistré'}))
-//     .catch((error) => res.status(400).json({error}));
-// };
-
 exports.createBook = async (req, res) => {
   try {
     const bookObject = JSON.parse(req.body.book);
@@ -72,48 +48,6 @@ exports.createBook = async (req, res) => {
     res.status(400).json({error});
   }
 };
-
-// exports.modifyBook = (req, res, next) => {
-//   Book.findOne({_id: req.params.id}).then((book) => {
-//     if (!book) {
-//       return res.status(404).json({message: 'Livre non trouvé'});
-//     }
-//     if (book.userId.toString() !== req.auth.userId) {
-//       return res.status(403).json({message: 'Non autorisé'});
-//     }
-//     let updatedBook;
-//     if (req.file) {
-//       const bookData = JSON.parse(req.body.book);
-//       updatedBook = {...bookData, _id: req.params.id};
-//       const oldFileName = book.imageUrl.split('/images/')[1];
-//       fs.unlink(`images/${oldFileName}`, (err) => {
-//         if (err) console.error(err);
-//       });
-//       const newFilename = `resized-${req.file.filename}`;
-//       sharp(req.file.path)
-//         .resize({height: 800})
-//         .toFile(`images/${newFilename}`)
-//         .then(() => {
-//           fs.unlink(req.file.path, (err) => {
-//             if (err) console.error('Erreur suppression image originale:', err);
-//           });
-//           updatedBook.imageUrl = `${req.protocol}://${req.get(
-//             'host'
-//           )}/images/${newFilename}`;
-
-//           return Book.updateOne({_id: req.params.id}, updatedBook);
-//         })
-//         .then(() => res.status(200).json({message: 'Livre modifié'}))
-//         .catch((error) => res.status(400).json({error}));
-//     } else {
-//       updatedBook = {...req.body, _id: req.params.id};
-//       updatedBook.imageUrl = book.imageUrl;
-//     }
-//     Book.updateOne({_id: req.params.id}, updatedBook)
-//       .then(() => res.status(200).json({message: 'Livre modifié'}))
-//       .catch((error) => res.status(400).json({error}));
-//   });
-// };
 
 exports.modifyBook = async (req, res) => {
   try {
